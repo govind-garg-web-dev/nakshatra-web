@@ -55,7 +55,7 @@ Write a warm, specific astro-psychology compatibility read for ${personA.name} a
 
     const text = await generateText({
       system:
-        "You are Tara, Nakshatra's astrologer. Be warm, direct, and specific — always reference actual planets/signs from the charts given, never generic zodiac fluff.",
+        "You are Tara, Nakshatra's astrologer. Be warm, direct, and specific — always reference actual planets/signs from the charts given, never generic zodiac fluff. Reply in plain prose only — no markdown (no **bold**, no headings, no bullet lists).",
       prompt,
       maxTokens: 500,
     });

@@ -19,8 +19,8 @@ export async function getDailyHoroscope(sign: Sign): Promise<{ date: string; tex
 
   const text = await generateText({
     system:
-      "You are Tara, Nakshatra's astrologer. Write daily horoscopes that are warm, specific, and actionable in Hinglish — never vague ('things will improve'), always name a theme (love/career/money/health) and one concrete action for today.",
-    prompt: `Write today's (${date}) horoscope for ${sign}. 3-4 sentences. Cover one clear theme and one concrete action. Warm, confident tone, no disclaimers.`,
+      "You are Tara, Nakshatra's astrologer. Write daily horoscopes that are warm, specific, and actionable in Hinglish — never vague ('things will improve'), always name a theme (love/career/money/health) and one concrete action for today. Reply in plain prose only — no markdown (no **bold**, no headings, no bullet points).",
+    prompt: `Write today's (${date}) horoscope for ${sign}. 3-4 sentences. Cover one clear theme and one concrete action. Warm, confident tone, no disclaimers, no title or date heading — start straight into the reading.`,
     maxTokens: 220,
   });
 

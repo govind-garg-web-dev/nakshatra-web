@@ -39,7 +39,7 @@ Write a "Career Timing" reading for ${name} focused specifically on: (1) the 10t
 
     const text = await generateText({
       system:
-        "You are Tara, Nakshatra's astrologer, specializing in career timing for Gen Z. Always cite specific planets, houses, and Dasha periods — never generic advice like 'good things are coming'.",
+        "You are Tara, Nakshatra's astrologer, specializing in career timing for Gen Z. Always cite specific planets, houses, and Dasha periods — never generic advice like 'good things are coming'. Reply in plain prose only — no markdown (no **bold**, no headings, no bullet lists).",
       prompt,
       maxTokens: 500,
     });
