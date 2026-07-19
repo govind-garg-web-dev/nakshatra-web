@@ -59,6 +59,7 @@ export function HumanCompatClient() {
   const [personA, setPersonA] = useState<PersonFields>(EMPTY);
   const [personB, setPersonB] = useState<PersonFields>(EMPTY);
   const [result, setResult] = useState<GunaMilanResult | null>(null);
+  const [narrative, setNarrative] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -75,6 +76,7 @@ export function HumanCompatClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not compute compatibility");
       setResult(data.result);
+      setNarrative(data.narrative ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -95,7 +97,9 @@ export function HumanCompatClient() {
         </div>
       </form>
 
-      {result && <CompatibilityResult result={result} nameA={personA.name} nameB={personB.name} />}
+      {result && (
+        <CompatibilityResult result={result} nameA={personA.name} nameB={personB.name} narrative={narrative} />
+      )}
     </div>
   );
 }

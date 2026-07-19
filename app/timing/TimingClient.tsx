@@ -29,6 +29,7 @@ export function TimingClient() {
   const [from, setFrom] = useState(initial.from);
   const [to, setTo] = useState(initial.to);
   const [windows, setWindows] = useState<MuhurtaWindow[] | null>(null);
+  const [narrative, setNarrative] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -45,6 +46,7 @@ export function TimingClient() {
       const data = await res.json();
       if (!res.ok) throw new Error(data.error ?? "Could not compute windows");
       setWindows(data.windows);
+      setNarrative(data.narrative ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -77,6 +79,12 @@ export function TimingClient() {
           <div className="flex h-full min-h-[200px] items-center justify-center rounded-2xl border border-dashed border-black/10 text-center text-ink/40">
             Your top 5 dates will appear here
           </div>
+        )}
+        {narrative && (
+          <Card className="p-5">
+            <h3 className="font-display text-lg text-ink mb-2">Tara&apos;s recommendation</h3>
+            <p className="whitespace-pre-line text-ink/80 leading-relaxed">{narrative}</p>
+          </Card>
         )}
         {windows?.map((w) => (
           <Card key={w.date} className="flex items-center justify-between p-5">

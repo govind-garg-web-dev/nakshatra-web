@@ -5,6 +5,7 @@ export interface Profile {
   name: string | null;
   created_at: string;
   last_active: string;
+  tags: string[] | null;
 }
 
 /** Ensures a profile + starting credits row exist for a freshly signed-in user. */
@@ -28,4 +29,16 @@ export async function getProfile(userId: string): Promise<Profile | null> {
 export async function touchLastActive(userId: string): Promise<void> {
   const supabase = createServiceRoleClient();
   await supabase.from("profiles").update({ last_active: new Date().toISOString() }).eq("id", userId);
+}
+
+/** Appends a life-context tag (e.g. "job_seeker") if the user doesn't already have it. */
+export async function addTag(userId: string, tag: string): Promise<void> {
+  const supabase = createServiceRoleClient();
+  const { data } = await supabase.from("profiles").select("tags").eq("id", userId).maybeSingle();
+  const existing: string[] = data?.tags ?? [];
+  if (existing.includes(tag)) return;
+  await supabase
+    .from("profiles")
+    .update({ tags: [...existing, tag] })
+    .eq("id", userId);
 }

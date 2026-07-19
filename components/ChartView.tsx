@@ -9,7 +9,15 @@ import { Card } from "@/components/ui/Card";
 
 type Style = "north" | "south";
 
-export function ChartView({ chart, name }: { chart: KundliChart; name?: string }) {
+export function ChartView({
+  chart,
+  name,
+  reading,
+}: {
+  chart: KundliChart;
+  name?: string;
+  reading?: string | null;
+}) {
   const [style, setStyle] = useState<Style>("north");
 
   const svg = style === "north" ? renderNorthChart(chart) : renderSouthChart(chart);
@@ -38,22 +46,29 @@ export function ChartView({ chart, name }: { chart: KundliChart; name?: string }
       </Card>
 
       <Card className="p-6">
-        <h3 className="font-display text-lg text-ink mb-3">Plain-language reading</h3>
-        <p className="text-ink/80 leading-relaxed">
-          Aapka Lagna (Ascendant) <strong>{chart.lagna.sign}</strong> hai, jiska swami{" "}
-          <strong>{chart.lagna.lord}</strong> hai — yeh aapke personality aur life approach ko shape karta hai. Aapka
-          Chandra (Moon) <strong>{chart.moon.sign}</strong> rashi mein <strong>{chart.moon.nakshatra}</strong> nakshatra
-          (pada {chart.moon.pada}) mein hai, jo aapki emotional nature dikhata hai.
-          {chart.mahadasha && (
-            <>
-              {" "}
-              Abhi aap <strong>{chart.mahadasha.lord} Mahadasha</strong> mein hain, saath mein{" "}
-              <strong>{chart.mahadasha.antardasha.lord} Antardasha</strong> chal raha hai (
-              {formatDateForDisplay(chart.mahadasha.antardasha.start)} se{" "}
-              {formatDateForDisplay(chart.mahadasha.antardasha.end)} tak).
-            </>
-          )}
-        </p>
+        <h3 className="font-display text-lg text-ink mb-3">
+          {reading ? "Tara's reading" : "Plain-language reading"}
+        </h3>
+        {reading ? (
+          <p className="whitespace-pre-line text-ink/80 leading-relaxed">{reading}</p>
+        ) : (
+          <p className="text-ink/80 leading-relaxed">
+            Aapka Lagna (Ascendant) <strong>{chart.lagna.sign}</strong> hai, jiska swami{" "}
+            <strong>{chart.lagna.lord}</strong> hai — yeh aapke personality aur life approach ko shape karta hai.
+            Aapka Chandra (Moon) <strong>{chart.moon.sign}</strong> rashi mein{" "}
+            <strong>{chart.moon.nakshatra}</strong> nakshatra (pada {chart.moon.pada}) mein hai, jo aapki emotional
+            nature dikhata hai.
+            {chart.mahadasha && (
+              <>
+                {" "}
+                Abhi aap <strong>{chart.mahadasha.lord} Mahadasha</strong> mein hain, saath mein{" "}
+                <strong>{chart.mahadasha.antardasha.lord} Antardasha</strong> chal raha hai (
+                {formatDateForDisplay(chart.mahadasha.antardasha.start)} se{" "}
+                {formatDateForDisplay(chart.mahadasha.antardasha.end)} tak).
+              </>
+            )}
+          </p>
+        )}
       </Card>
 
       <Card className="overflow-x-auto p-6">

@@ -5,6 +5,7 @@ import { gunaMilan } from "@/lib/astro/gunaMilan";
 import { geocodeCity } from "@/lib/utils/geocode";
 import { chartToReadableText } from "@/lib/ai/context";
 import { generateText } from "@/lib/ai/claude";
+import { generateGunaMilanReading } from "@/lib/ai/readings";
 import { logger } from "@/lib/utils/logger";
 
 const personSchema = z.object({
@@ -42,7 +43,16 @@ export async function POST(request: Request) {
 
   if (mode === "guna") {
     const result = gunaMilan(chartA, chartB);
-    return NextResponse.json({ result });
+
+    let narrative: string | null = null;
+    try {
+      narrative = await generateGunaMilanReading(chartA, chartB, personA.name, personB.name, result);
+    } catch (err) {
+      // The score/breakdown above is always correct regardless of this call.
+      logger.error("guna milan AI narrative failed", { error: String(err) });
+    }
+
+    return NextResponse.json({ result, narrative });
   }
 
   // mode === "psychology": ask Claude for a psychological compatibility read

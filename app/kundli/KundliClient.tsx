@@ -9,6 +9,7 @@ import type { KundliChart } from "@/lib/astro/kundli";
 export function KundliClient() {
   const [chart, setChart] = useState<KundliChart | null>(null);
   const [chartName, setChartName] = useState<string>("");
+  const [reading, setReading] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -25,6 +26,7 @@ export function KundliClient() {
       if (!res.ok) throw new Error(data.error ?? "Could not compute your chart");
       setChart(data.chart);
       setChartName(details.name);
+      setReading(data.reading ?? null);
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -42,7 +44,7 @@ export function KundliClient() {
 
       <div>
         {chart ? (
-          <ChartView chart={chart} name={chartName} />
+          <ChartView chart={chart} name={chartName} reading={reading} />
         ) : (
           <div className="flex h-full min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-black/10 text-center text-ink/40">
             Your Kundli will appear here

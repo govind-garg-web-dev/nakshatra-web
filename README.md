@@ -16,8 +16,9 @@ from.
      features degrade to a friendly "try again" message instead of crashing.
    - `NEXT_PUBLIC_SUPABASE_URL` / `NEXT_PUBLIC_SUPABASE_ANON_KEY` /
      `SUPABASE_SERVICE_ROLE_KEY` — required for auth, saved charts, chat
-     history, and credits. Run the SQL in the masterplan's Section 5 against
-     your Supabase project first.
+     history, and credits. Run `supabase/schema.sql` against your project
+     first (Supabase Dashboard → SQL Editor → paste the file → Run). It's
+     idempotent, safe to re-run if you add more tables later.
    - `RAZORPAY_KEY_ID` / `RAZORPAY_KEY_SECRET` / `RAZORPAY_WEBHOOK_SECRET` —
      required for paid reports and question packs (uses Razorpay Payment
      Links, not Checkout.js).

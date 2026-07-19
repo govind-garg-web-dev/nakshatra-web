@@ -14,10 +14,12 @@ export function CompatibilityResult({
   result,
   nameA,
   nameB,
+  narrative,
 }: {
   result: GunaMilanResult;
   nameA: string;
   nameB: string;
+  narrative?: string | null;
 }) {
   const verdict = verdictFor(result.total);
 
@@ -62,6 +64,13 @@ export function CompatibilityResult({
         <h3 className="font-display text-lg text-ink mb-2">Mangal Dosha</h3>
         <p className="text-ink/70">{result.mangalDosha.note}</p>
       </Card>
+
+      {narrative && (
+        <Card className="p-6">
+          <h3 className="font-display text-lg text-ink mb-2">Tara&apos;s take</h3>
+          <p className="whitespace-pre-line text-ink/80 leading-relaxed">{narrative}</p>
+        </Card>
+      )}
     </div>
   );
 }

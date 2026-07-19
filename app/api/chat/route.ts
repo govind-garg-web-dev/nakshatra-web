@@ -1,11 +1,12 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { createServerSupabaseClient } from "@/lib/db/client";
-import { getProfile } from "@/lib/db/users";
+import { getProfile, addTag } from "@/lib/db/users";
 import { listCharts } from "@/lib/db/charts";
 import { appendMessage, getRecentMessages } from "@/lib/db/conversations";
 import { deductCredit, getBalance } from "@/lib/db/credits";
 import { buildChatContext } from "@/lib/ai/context";
+import { detectTags } from "@/lib/ai/tags";
 import { buildTaraSystemPrompt } from "@/lib/ai/taraPrompt";
 import { streamText } from "@/lib/ai/claude";
 import { PRODUCTS } from "@/lib/payments/products";
@@ -56,10 +57,17 @@ export async function POST(request: Request) {
       userName: profile?.name ?? "dost",
       chart: charts[0]?.chart_json ?? null,
       recentMessages: recent.map((m) => ({ role: m.role, content: m.content })),
+      tags: profile?.tags ?? [],
     });
 
     await deductCredit(user.id);
     await appendMessage(user.id, "user", message);
+
+    // Non-blocking: remember life-context tags (job_seeker, marriage_planning,
+    // ...) so future conversations don't need the user to repeat themselves.
+    for (const tag of detectTags(message)) {
+      addTag(user.id, tag).catch((err) => logger.error("failed to save tag", { error: String(err), tag }));
+    }
 
     const stream = await streamText({
       system: buildTaraSystemPrompt(contextPreamble),

@@ -1,6 +1,8 @@
 import { NextResponse } from "next/server";
 import { z } from "zod";
 import { findMuhurtaWindows } from "@/lib/astro/muhurta";
+import { generateMuhurtaReading } from "@/lib/ai/readings";
+import { logger } from "@/lib/utils/logger";
 
 const bodySchema = z.object({
   eventType: z.enum(["wedding", "travel", "business_launch", "house_warming", "education", "general"]),
@@ -28,5 +30,13 @@ export async function POST(request: Request) {
   // compatibility, current Dasha) once a saved chart is passed in.
   const windows = findMuhurtaWindows(eventType, from, to);
 
-  return NextResponse.json({ windows });
+  let narrative: string | null = null;
+  try {
+    narrative = await generateMuhurtaReading(eventType, windows);
+  } catch (err) {
+    // The scored windows above are always correct regardless of this call.
+    logger.error("muhurta AI narrative failed", { error: String(err) });
+  }
+
+  return NextResponse.json({ windows, narrative });
 }

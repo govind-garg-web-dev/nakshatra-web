@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { z } from "zod";
 import { computeKundli } from "@/lib/astro/kundli";
 import { geocodeCity } from "@/lib/utils/geocode";
+import { generateKundliReading } from "@/lib/ai/readings";
 import { logger } from "@/lib/utils/logger";
 
 const bodySchema = z.object({
@@ -28,8 +29,18 @@ export async function POST(request: Request) {
 
     const chart = computeKundli({ dob, tob, lat: place.latitude, lon: place.longitude });
 
+    let reading: string | null = null;
+    try {
+      reading = await generateKundliReading(chart, name ?? "friend");
+    } catch (err) {
+      // AI narration is a nice-to-have on top of the (always-correct) chart
+      // math above — never fail the whole request if Claude is unavailable.
+      logger.error("kundli AI reading failed", { error: String(err) });
+    }
+
     return NextResponse.json({
       chart,
+      reading,
       input: { name, dob, tob, city: place.displayName, lat: place.latitude, lon: place.longitude },
     });
   } catch (err) {
