@@ -4,6 +4,15 @@ import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { LoadingPhrases } from "@/components/ui/LoadingPhrases";
+
+const LOADING_PHRASES = [
+  "Reading both charts…",
+  "Comparing temperaments…",
+  "Checking Sun, Moon, and Mars…",
+  "Understanding how you two click…",
+  "Almost there…",
+];
 
 interface PersonFields {
   name: string;
@@ -86,11 +95,12 @@ export function PsychologyCompatClient() {
       <form onSubmit={handleSubmit} className="grid gap-6 md:grid-cols-2">
         <PersonFieldset label="Person 1" value={personA} onChange={setPersonA} />
         <PersonFieldset label="Person 2" value={personB} onChange={setPersonB} />
-        <div className="md:col-span-2">
-          <Button type="submit" disabled={loading} size="lg">
+        <div className="md:col-span-2 flex flex-col gap-3">
+          <Button type="submit" disabled={loading} size="lg" className="w-fit">
             {loading ? "Tara is reading your charts…" : "Get the psychology read"}
           </Button>
-          {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
+          <LoadingPhrases phrases={LOADING_PHRASES} active={loading} />
+          {error && <p className="text-sm text-red-600">{error}</p>}
         </div>
       </form>
 

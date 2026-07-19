@@ -5,7 +5,16 @@ import { Select } from "@/components/ui/Select";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
+import { LoadingPhrases } from "@/components/ui/LoadingPhrases";
 import type { EventType, MuhurtaWindow } from "@/lib/astro/muhurta";
+
+const LOADING_PHRASES = [
+  "Scanning the calendar…",
+  "Checking auspicious tithis…",
+  "Consulting the Panchang…",
+  "Finding your lucky window…",
+  "Almost there…",
+];
 
 const EVENT_OPTIONS: { value: EventType; label: string }[] = [
   { value: "wedding", label: "Wedding" },
@@ -70,6 +79,7 @@ export function TimingClient() {
           <Button type="submit" disabled={loading} className="mt-2">
             {loading ? "Finding windows…" : "Find auspicious dates"}
           </Button>
+          <LoadingPhrases phrases={LOADING_PHRASES} active={loading} />
           {error && <p className="text-sm text-red-600">{error}</p>}
         </form>
       </Card>

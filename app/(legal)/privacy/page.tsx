@@ -37,7 +37,7 @@ export default function PrivacyPage() {
         <section>
           <h2 className="font-display text-xl text-ink">Your rights</h2>
           <p className="mt-2">
-            You can delete your account and all associated data at any time from your dashboard, in two taps. Email{" "}
+            You can delete your account and all associated data at any time from your profile, in two taps. Email{" "}
             <a href="mailto:hello@nakshatra.app" className="text-accent underline">
               hello@nakshatra.app
             </a>{" "}

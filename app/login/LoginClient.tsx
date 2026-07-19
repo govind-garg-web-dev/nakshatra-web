@@ -64,7 +64,7 @@ export function LoginClient() {
     const { error } = await supabase.auth.verifyOtp({ phone, token: code, type: "sms" });
     setLoading(null);
     if (error) setError(error.message);
-    else window.location.href = "/dashboard";
+    else window.location.href = "/profile";
   }
 
   return (

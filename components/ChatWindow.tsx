@@ -2,13 +2,20 @@
 
 import { FormEvent, useRef, useState } from "react";
 import { Button } from "@/components/ui/Button";
-import { Spinner } from "@/components/ui/Spinner";
+import { LoadingPhrases } from "@/components/ui/LoadingPhrases";
 import { PaywallModal } from "@/components/PaywallModal";
 
 interface Message {
   role: "user" | "assistant";
   content: string;
 }
+
+const LOADING_PHRASES = [
+  "Tara is thinking…",
+  "Reading your chart…",
+  "Checking your Dasha…",
+  "Consulting the planets…",
+];
 
 export function ChatWindow({ signedIn }: { signedIn: boolean }) {
   const [messages, setMessages] = useState<Message[]>([
@@ -94,7 +101,11 @@ export function ChatWindow({ signedIn }: { signedIn: boolean }) {
               m.role === "user" ? "ml-auto bg-accent text-white" : "bg-black/5 text-ink"
             }`}
           >
-            {m.content || (m.role === "assistant" && loading ? <Spinner /> : "")}
+            {m.content || (m.role === "assistant" && loading ? (
+              <LoadingPhrases phrases={LOADING_PHRASES} active intervalMs={1400} />
+            ) : (
+              ""
+            ))}
           </div>
         ))}
       </div>

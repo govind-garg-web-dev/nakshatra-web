@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import Link from "next/link";
 import { BirthForm, type BirthDetails } from "@/components/BirthForm";
 import { ChartView } from "@/components/ChartView";
 import { Card } from "@/components/ui/Card";
@@ -10,6 +11,7 @@ export function KundliClient() {
   const [chart, setChart] = useState<KundliChart | null>(null);
   const [chartName, setChartName] = useState<string>("");
   const [reading, setReading] = useState<string | null>(null);
+  const [saved, setSaved] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -27,6 +29,7 @@ export function KundliClient() {
       setChart(data.chart);
       setChartName(details.name);
       setReading(data.reading ?? null);
+      setSaved(Boolean(data.saved));
     } catch (err) {
       setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
@@ -44,7 +47,19 @@ export function KundliClient() {
 
       <div>
         {chart ? (
-          <ChartView chart={chart} name={chartName} reading={reading} />
+          <div className="flex flex-col gap-4">
+            {saved ? (
+              <p className="text-sm text-emerald-600">✓ Saved to your profile</p>
+            ) : (
+              <p className="text-sm text-ink/50">
+                <Link href="/login?next=/kundli" className="text-accent underline">
+                  Sign in
+                </Link>{" "}
+                to save this chart to your profile.
+              </p>
+            )}
+            <ChartView chart={chart} name={chartName} reading={reading} />
+          </div>
         ) : (
           <div className="flex h-full min-h-[300px] items-center justify-center rounded-2xl border border-dashed border-black/10 text-center text-ink/40">
             Your Kundli will appear here

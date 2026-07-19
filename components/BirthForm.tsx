@@ -3,6 +3,15 @@
 import { FormEvent, useState } from "react";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { LoadingPhrases } from "@/components/ui/LoadingPhrases";
+
+const DEFAULT_LOADING_PHRASES = [
+  "Consulting the planets…",
+  "Calculating your Lagna…",
+  "Mapping your Nakshatra…",
+  "Aligning the stars for you…",
+  "Almost there…",
+];
 
 export interface BirthDetails {
   name: string;
@@ -16,11 +25,13 @@ export function BirthForm({
   loading,
   submitLabel = "Generate my Kundli",
   showName = true,
+  loadingPhrases = DEFAULT_LOADING_PHRASES,
 }: {
   onSubmit: (details: BirthDetails) => void;
   loading?: boolean;
   submitLabel?: string;
   showName?: boolean;
+  loadingPhrases?: string[];
 }) {
   const [name, setName] = useState("");
   const [dob, setDob] = useState("");
@@ -75,6 +86,7 @@ export function BirthForm({
       <Button type="submit" disabled={loading} className="mt-2">
         {loading ? "Calculating…" : submitLabel}
       </Button>
+      <LoadingPhrases phrases={loadingPhrases} active={Boolean(loading)} className="justify-center" />
     </form>
   );
 }

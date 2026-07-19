@@ -39,7 +39,7 @@ export async function POST(request: Request) {
       description: product.label,
       referenceId: `${user.id}-${parsed.data.product}-${Date.now()}`,
       notes: { userId: user.id, product: parsed.data.product },
-      callbackUrl: `${baseUrl}/dashboard`,
+      callbackUrl: `${baseUrl}/profile`,
     });
 
     // NB: the `orders` table comment says "razorpay order id" but we use the

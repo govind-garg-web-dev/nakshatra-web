@@ -32,6 +32,7 @@ interface ButtonAsButton extends CommonProps, Omit<ButtonHTMLAttributes<HTMLButt
 
 interface ButtonAsLink extends CommonProps {
   href: string;
+  onClick?: () => void;
 }
 
 export function Button(props: ButtonAsButton | ButtonAsLink) {
@@ -40,7 +41,7 @@ export function Button(props: ButtonAsButton | ButtonAsLink) {
 
   if ("href" in props && props.href) {
     return (
-      <Link href={props.href} className={classes}>
+      <Link href={props.href} className={classes} onClick={props.onClick}>
         {children}
       </Link>
     );

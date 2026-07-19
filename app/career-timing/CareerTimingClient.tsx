@@ -15,6 +15,14 @@ interface CareerResult {
   } | null;
 }
 
+const CAREER_LOADING_PHRASES = [
+  "Reading your 10th house…",
+  "Checking your career Dasha…",
+  "Mapping your job windows…",
+  "Consulting Saturn and Jupiter…",
+  "Almost there…",
+];
+
 export function CareerTimingClient() {
   const [result, setResult] = useState<CareerResult | null>(null);
   const [loading, setLoading] = useState(false);
@@ -43,7 +51,12 @@ export function CareerTimingClient() {
     <div className="grid gap-8 lg:grid-cols-[380px_1fr]">
       <Card className="h-fit p-6">
         <h2 className="font-display text-xl text-ink mb-4">When will I get the job?</h2>
-        <BirthForm onSubmit={handleSubmit} loading={loading} submitLabel="Find my career window" />
+        <BirthForm
+          onSubmit={handleSubmit}
+          loading={loading}
+          submitLabel="Find my career window"
+          loadingPhrases={CAREER_LOADING_PHRASES}
+        />
         {error && <p className="mt-3 text-sm text-red-600">{error}</p>}
       </Card>
 

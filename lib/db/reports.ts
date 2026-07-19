@@ -30,3 +30,14 @@ export async function getReportByOrder(orderId: string): Promise<Report | null> 
   const { data } = await supabase.from("reports").select("*").eq("order_id", orderId).maybeSingle();
   return data;
 }
+
+export async function listReportsForUser(userId: string): Promise<Report[]> {
+  const supabase = createServiceRoleClient();
+  const { data, error } = await supabase
+    .from("reports")
+    .select("*")
+    .eq("user_id", userId)
+    .order("created_at", { ascending: false });
+  if (error) throw error;
+  return data ?? [];
+}

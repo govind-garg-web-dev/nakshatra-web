@@ -3,6 +3,8 @@ import { z } from "zod";
 import { computeKundli } from "@/lib/astro/kundli";
 import { geocodeCity } from "@/lib/utils/geocode";
 import { generateKundliReading } from "@/lib/ai/readings";
+import { createServerSupabaseClient } from "@/lib/db/client";
+import { saveChart } from "@/lib/db/charts";
 import { logger } from "@/lib/utils/logger";
 
 const bodySchema = z.object({
@@ -38,9 +40,36 @@ export async function POST(request: Request) {
       logger.error("kundli AI reading failed", { error: String(err) });
     }
 
+    // Auto-save to the user's profile when signed in, so every Kundli they
+    // generate shows up on /profile without an extra "Save" step.
+    let saved = false;
+    try {
+      const supabase = await createServerSupabaseClient();
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (user) {
+        await saveChart({
+          userId: user.id,
+          label: name || "Me",
+          dob,
+          tob,
+          pob: place.displayName,
+          latitude: place.latitude,
+          longitude: place.longitude,
+          chart,
+        });
+        saved = true;
+      }
+    } catch (err) {
+      logger.error("kundli auto-save failed", { error: String(err) });
+    }
+
     return NextResponse.json({
       chart,
       reading,
+      saved,
       input: { name, dob, tob, city: place.displayName, lat: place.latitude, lon: place.longitude },
     });
   } catch (err) {
